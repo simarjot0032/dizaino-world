@@ -11,7 +11,6 @@ import {
 import FeaturesSection from "@Components/FeaturesSection";
 import HowWeDesign from "@Components/HowWeDesign";
 import { SlideshowLightbox } from "lightbox.js-react";
-import "lightbox.js-react/dist/index.css";
 import hero from "@Assets/Washroom/hero.webp";
 
 export default function Washroom() {

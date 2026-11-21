@@ -10,7 +10,6 @@ import {
   AccordianKitchen,
 } from "@Data/Kitchen";
 import { SlideshowLightbox } from "lightbox.js-react";
-import "lightbox.js-react/dist/index.css";
 
 import Accordian from "@Components/Accordian";
 import Footer from "@Components/Footer";

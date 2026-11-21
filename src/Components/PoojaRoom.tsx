@@ -12,7 +12,6 @@ import {
 import FeaturesSection from "@Components/FeaturesSection";
 import HowWeDesing from "@Components/HowWeDesign";
 import { SlideshowLightbox } from "lightbox.js-react";
-import "lightbox.js-react/dist/index.css";
 
 export default function PoojaRoom() {
   const handlebedroomscroll = () => {

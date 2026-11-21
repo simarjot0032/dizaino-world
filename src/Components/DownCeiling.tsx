@@ -12,7 +12,6 @@ import Accordian from "@Components/Accordian";
 import FeaturesSection from "@Components/FeaturesSection";
 import HowWeDesign from "./HowWeDesign";
 import { SlideshowLightbox } from "lightbox.js-react";
-import "lightbox.js-react/dist/index.css";
 import hero from "@Assets/DownCelling/hero.webp";
 
 export default function DownCelling() {

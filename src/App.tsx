@@ -2,7 +2,6 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Home from "@Components/Home";
-import "lightbox.js-react/dist/index.css";
 import { useEffect } from "react";
 import UnderCons from "@Components/UnderConst";
 import Bedroom from "@Components/Bedroom";

@@ -12,7 +12,6 @@ import HowWeDesign from "@Components/HowWeDesign";
 import { SlideshowLightbox } from "lightbox.js-react";
 import Accordian from "@Components/Accordian";
 import Footer from "@Components/Footer";
-import "lightbox.js-react/dist/index.css";
 
 export default function LivingAreas() {
   return (

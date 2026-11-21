@@ -7,10 +7,9 @@ import { IoMdHappy } from "react-icons/io";
 import { MdOutlineDesignServices } from "react-icons/md";
 import { FaStarOfLife } from "react-icons/fa6";
 import { BiSolidDetail } from "react-icons/bi";
-import { SiAffinitydesigner } from "react-icons/si";
+import { MdDesignServices } from "react-icons/md";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { SlideshowLightbox } from "lightbox.js-react";
-import "lightbox.js-react/dist/index.css";
 import "@Data/LightBoxDataHome";
 import { useState } from "react";
 import Footer from "@Components/Footer";
@@ -336,7 +335,7 @@ export default function Home() {
                   }}
                 >
                   <div className="choose-us-card-header">
-                    <SiAffinitydesigner size={50} color="var(--primarycolor)" />
+                    <MdDesignServices size={50} color="var(--primarycolor)" />
                   </div>
                   <div className="choose-us-card-heading">
                     Versatility in Design Styles
