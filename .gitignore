@@ -32,3 +32,6 @@ pnpm-debug.log*
 # TypeScript / Vite caches
 *.tsbuildinfo
 .vite/
+
+# Vercel
+.vercel/

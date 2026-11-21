@@ -1,8 +1,7 @@
-import AdminSidebar from "@Components/ADMIN/AdminSidebar";
-import { useEffect, useRef } from "react";
+import AdminSidebar, { AdminHeader } from "@Components/ADMIN/AdminSidebar";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import "@Styles/Admin/ChangePassword.css";
-import { IoLogOut } from "react-icons/io5";
 import { onAuthStateChanged, signOut, updatePassword } from "firebase/auth";
 import { auth } from "src/Config/Firebase-config";
 import toast from "react-hot-toast";
@@ -10,87 +9,102 @@ import toast from "react-hot-toast";
 export default function ChangePassword() {
   const passwordref = useRef<HTMLInputElement>(null);
   const passwordconfirmref = useRef<HTMLInputElement>(null);
+  const [saving, setSaving] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
-    onAuthStateChanged(auth, (data) => {
-      if (data) {
-      } else {
-        navigate("/Admin-login");
-      }
+    const unsubscribe = onAuthStateChanged(auth, (data) => {
+      if (!data) navigate("/admin");
     });
-  }, []);
+    return unsubscribe;
+  }, [navigate]);
+
   const HandleLogOut = () => {
     signOut(auth);
-
     toast.success("User Logged Out");
   };
-  const HandleChangePassword = (e: any) => {
+
+  const HandleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const useremail = auth.currentUser;
     if (!useremail) return;
-    let passwordobj = {
-      password: "",
-      confirmedpassword: "",
-    };
-    let { password, confirmedpassword } = passwordobj;
-    if (passwordref.current) {
-      password = passwordref.current?.value;
+    const password = passwordref.current?.value ?? "";
+    const confirmedpassword = passwordconfirmref.current?.value ?? "";
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
     }
-    if (passwordconfirmref.current) {
-      confirmedpassword = passwordconfirmref.current.value;
+    if (password !== confirmedpassword) {
+      toast.error("Passwords do not match");
+      return;
     }
-    if (password === confirmedpassword) {
-      try {
-        updatePassword(useremail, password);
-        signOut(auth);
-        toast.success("Password Updated Please Login again");
-      } catch (e) {
-        console.log(e);
-        toast.error("password doesnot match");
-      }
-    } else {
-      console.log("not");
-      toast.error("password doesnot match");
+    setSaving(true);
+    try {
+      await updatePassword(useremail, password);
+      signOut(auth);
+      toast.success("Password updated. Please log in again");
+    } catch (err) {
+      console.log(err);
+      toast.error("Couldn't update password. Log in again and retry");
+    } finally {
+      setSaving(false);
     }
   };
+
   return (
-    <>
-      <div className="admin-main-container">
-        <AdminSidebar activeclass="AdminChange" />
-        <div className="change-password-container">
-          <div className="change-password-header">
-            <h2 className="change-password-heading">Change Password</h2>
-            <button className="log-out" onClick={HandleLogOut}>
-              <IoLogOut color="white" size={30} /> LogOut
-            </button>
-          </div>
-          <div className="change-password-content-container">
-            <form
-              action=""
-              className="change-password-form"
-              onSubmit={HandleChangePassword}
-            >
-              <label htmlFor="new" className="label">
-                New Password
-              </label>
-              <input type="password" name="" id="new" ref={passwordref} />
-              <label htmlFor="confirm" className="label">
-                Confirm Password
+    <div className="adm-shell">
+      <AdminSidebar activeclass="AdminChange" />
+      <main className="adm-main">
+        <AdminHeader
+          eyebrow="Security"
+          title={
+            <>
+              Change password
+            </>
+          }
+          onLogout={HandleLogOut}
+        />
+        <section className="adm-card adm-card--narrow">
+          <form className="adm-form" onSubmit={HandleChangePassword}>
+            <div className="adm-field">
+              <label htmlFor="new" className="adm-label">
+                New password
               </label>
               <input
                 type="password"
-                name=""
+                id="new"
+                ref={passwordref}
+                className="adm-input"
+                autoComplete="new-password"
+                minLength={6}
+                required
+              />
+            </div>
+            <div className="adm-field">
+              <label htmlFor="confirm" className="adm-label">
+                Confirm password
+              </label>
+              <input
+                type="password"
                 id="confirm"
                 ref={passwordconfirmref}
+                className="adm-input"
+                autoComplete="new-password"
+                minLength={6}
+                required
               />
-              <button type="submit" className="submitbtn">
-                Update Password
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </>
+            </div>
+            <button
+              type="submit"
+              className="btn btn--dark"
+              disabled={saving}
+              aria-busy={saving}
+            >
+              {saving ? "Updating…" : "Update password"}
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
   );
 }

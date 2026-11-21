@@ -1,71 +1,52 @@
+import "@Styles/Admin/Admin.css";
 import "@Styles/Admin/Login.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import {
-  Auth,
-  getAuth,
-  onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "src/Config/Firebase-config";
-import { useNavigate } from "react-router-dom";
-import Logo from "/icon.png";
+import { Link } from "react-router-dom";
+import { LuArrowLeft, LuArrowRight } from "react-icons/lu";
+import { LogoMark } from "@Components/Logo";
 import toast from "react-hot-toast";
 
 export default function Login() {
   const [forget, setforget] = useState(false);
+  const [busy, setBusy] = useState(false);
   const Handleforgetform = () => {
     setforget(!forget);
   };
-  const navigate = useNavigate();
   const emailin = useRef<HTMLInputElement>(null);
   const passwordin = useRef<HTMLInputElement>(null);
   const Forgetemailref = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (localStorage.getItem("userstatus") === "true") {
-      navigate("/Admin");
-    } else {
-      navigate("/Admin-login");
-    }
-  }, [navigate]);
-  const HandleSubmit = async (e: any) => {
-    const credentials = { email: "", password: "" };
+
+
+  const HandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (emailin.current) {
-      credentials.email = emailin?.current?.value;
-    }
-    if (passwordin.current) {
-      credentials.password = passwordin.current.value;
-    }
-    console.log(credentials);
-    const { email, password } = credentials;
-
+    const email = emailin.current?.value ?? "";
+    const password = passwordin.current?.value ?? "";
+    setBusy(true);
     try {
-      const userlogin = await signInWithEmailAndPassword(auth, email, password);
-
-      toast.success("Logged In Sucessfully");
-      navigate("/Admin");
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Logged in successfully");
     } catch (error) {
-      console.log(error);
-      navigate("/Admin-login");
-
-      toast.error("Email and password does not match");
+      console.error(error);
+      toast.error("Email and password do not match");
+    } finally {
+      setBusy(false);
     }
   };
-  const HandleForgetPassword = async (e: any) => {
-    e.preventDefault();
-    console.log(e);
-    let Forgetemail = { email: "" };
-    if (Forgetemailref.current) {
-      Forgetemail.email = Forgetemailref.current?.value;
-    }
 
+  const HandleForgetPassword = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = Forgetemailref.current?.value ?? "";
     try {
       if (
-        Forgetemail.email == "simarjot0032@gmail.com" ||
-        Forgetemail.email == "hardeep.creation@gmail.com"
+        email == "simarjot0032@gmail.com" ||
+        email == "hardeep.creation@gmail.com"
       ) {
-        await sendPasswordResetEmail(auth, Forgetemail.email);
+        await sendPasswordResetEmail(auth, email);
         toast.success("Password reset email sent successfully");
       } else {
         toast.error("Email address not found. Please try a different email.");
@@ -75,75 +56,117 @@ export default function Login() {
       toast.error("Email address not found. Please try a different email.");
     }
   };
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      user ? navigate("/Admin") : "";
-    });
-  });
+
+
   return (
-    <>
-      <div className="login-container">
-        {!forget && (
+    <main className="adm-login">
+      <div className="adm-login__card">
+        <div className="adm-login__brand">
+          <LogoMark size={32} />
+          <span>Dizaino World</span>
+        </div>
+
+        {!forget ? (
           <>
-            <div className="company-profile-login">
-              <img src={Logo} alt="" className="login-page-logo" />
-              <h2 className="company-profile-name">Dizaino-World</h2>
+            <div className="adm-login__head">
+              <span className="eyebrow">Admin</span>
+              <h1 className="adm-title">
+                Sign in
+              </h1>
             </div>
-            <div className="login-form-container">
-              <h2 className="login-form-heading">Login</h2>
-              <form action="" className="login-form" onSubmit={HandleSubmit}>
-                <label htmlFor="admin-email" className="label">
-                  Email:
+            <form className="adm-form" onSubmit={HandleSubmit}>
+              <div className="adm-field">
+                <label htmlFor="admin-email" className="adm-label">
+                  Email
                 </label>
                 <input
                   type="email"
-                  placeholder="Enter Your Email"
+                  placeholder="you@example.com"
                   name="admin-email"
                   id="admin-email"
+                  autoComplete="email"
+                  className="adm-input"
                   ref={emailin}
+                  required
                 />
-                <label htmlFor="admin-password" className="label">
-                  Password:
+              </div>
+              <div className="adm-field">
+                <label htmlFor="admin-password" className="adm-label">
+                  Password
                 </label>
                 <input
                   type="password"
                   id="admin-password"
-                  placeholder="Enter Your Password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className="adm-input"
                   ref={passwordin}
+                  required
                 />
-                <button type="submit" className="submitbtn">
-                  Login
+              </div>
+              <div className="adm-login__actions">
+                <button
+                  type="submit"
+                  className="btn btn--dark"
+                  disabled={busy}
+                  aria-busy={busy}
+                >
+                  {busy ? "Signing in…" : "Log in"} <LuArrowRight aria-hidden />
                 </button>
-                <p className="forget-password" onClick={Handleforgetform}>
-                  Forget Password?
-                </p>
-              </form>
+                <button
+                  type="button"
+                  className="adm-login__link"
+                  onClick={Handleforgetform}
+                >
+                  Forgot password?
+                </button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <>
+            <div className="adm-login__head">
+              <span className="eyebrow">Admin</span>
+              <h1 className="adm-title">
+                Reset password
+              </h1>
+              <p className="muted">We'll email you a link to set a new one.</p>
             </div>
-            <div className="login-return">
-              <p className="go-back-text">Go Back To Dizaino World</p>
-            </div>
+            <form className="adm-form" onSubmit={HandleForgetPassword}>
+              <div className="adm-field">
+                <label htmlFor="forget-email" className="adm-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="forget-email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className="adm-input"
+                  ref={Forgetemailref}
+                  required
+                />
+              </div>
+              <div className="adm-login__actions">
+                <button type="submit" className="btn btn--dark">
+                  Send reset link
+                </button>
+                <button
+                  type="button"
+                  className="adm-login__link"
+                  onClick={Handleforgetform}
+                >
+                  Back to login
+                </button>
+              </div>
+            </form>
           </>
         )}
-        {forget && (
-          <div className="forget-password-form">
-            <h2 className="forget-password-heading">Forget Password</h2>
-            <form action="" className="forget" onSubmit={HandleForgetPassword}>
-              <input
-                type="email"
-                placeholder="Enter Yor Email"
-                className="admin-email"
-                ref={Forgetemailref}
-              />
-              <button type="submit" className="forget-password-btn">
-                Reset Password
-              </button>
-            </form>
-            <p className="go-back-text-login" onClick={Handleforgetform}>
-              Go Back To Login
-            </p>
-          </div>
-        )}
       </div>
-    </>
+
+      <Link to="/" className="adm-login__back">
+        <LuArrowLeft aria-hidden /> Back to Dizaino World
+      </Link>
+    </main>
   );
 }

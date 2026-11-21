@@ -1,38 +1,114 @@
-.accordian-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Accordian: hairline FAQ rows with +/− icon and animated height. */
+.acc {
+  border-top: 1px solid var(--line);
+}
+.acc:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.section--dark .acc {
+  border-color: var(--line-light);
+}
+.acc__heading {
+  font: inherit;
+}
+.acc__btn {
   width: 100%;
-  padding: 1rem;
-}
-
-.accordian-box-container {
-  background-color: #ffffff;
-  padding: 1rem 0.5rem;
-  border-radius: 10px;
-  margin: 1rem 0;
-  user-select: none;
-  box-shadow: 0 0 5px 2px rgb(200, 200, 200);
-}
-.accordian-question-box {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  cursor: pointer;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  text-align: left;
+}
+.acc__q {
+  font-size: clamp(1.02rem, 1.3vw, 1.2rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  transition: color 0.3s var(--ease);
+}
+.acc__btn:hover .acc__q {
+  color: var(--ink-soft);
+}
+.section--dark .acc__btn:hover .acc__q {
+  color: var(--bronze-soft);
+}
+.acc__icon {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  transition: background 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.acc__icon::before,
+.acc__icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 1.5px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform 0.4s var(--ease), opacity 0.3s var(--ease);
+}
+.acc__icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.acc.is-open .acc__icon {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bone);
+}
+.acc.is-open .acc__icon::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
+}
+.section--dark .acc.is-open .acc__icon {
+  background: var(--bone);
+  border-color: var(--bone);
+  color: var(--ink);
+}
+.acc__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease);
+}
+.acc.is-open .acc__panel {
+  grid-template-rows: 1fr;
+}
+.acc__inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.acc__a {
+  padding: 0 3.5rem 1.6rem 0;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 62ch;
+}
+.section--dark .acc__a {
+  color: rgba(236, 232, 225, 0.72);
+}
+@media (max-width: 600px) {
+  .acc__a {
+    padding-right: 0;
+  }
 }
 
-.accordian-question {
-  font-family: var(--fontsecond);
-  font-size: 1.5rem;
-  color: var(--primarycolor);
+/* Legacy wrapper classes (kept so older markup around the accordion still lays out) */
+.accordian-container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: var(--section-y) var(--gutter);
+}
+.accordian-container-heading {
+  font-size: var(--fs-h2);
   font-weight: 500;
-}
-.accordian-answer {
-  color: rgb(80, 80, 80);
-  font-family: var(--font);
-  line-height: 2.2rem;
-  margin-top: 0.5rem;
-}
-.none {
-  display: none;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  margin-bottom: 2rem;
 }

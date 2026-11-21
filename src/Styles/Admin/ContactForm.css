@@ -1,35 +1,9 @@
-.contact-content-container {
-  padding: 15px 25px;
-  background-color: rgb(235, 235, 235);
+/* Contact enquiries — uses the shared admin table in Admin.css */
+.adm-table td:first-child {
+  white-space: nowrap;
 }
-.btn-container {
-  display: flex;
-  justify-content: end;
-}
-table,
-tr,
-td,
-th {
-  font-family: var(--font);
-  text-align: left;
-}
-table {
-  border: 2px solid black;
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
-.Columnsname {
-  display: table-row;
-}
-tr {
-  border-bottom: 2px solid black;
-  word-break: break-all;
-}
-tr,
-th,
-td {
-  border-right: 2px solid black;
-  padding: 1rem;
-  font-size: 1.5rem;
+.adm-table td:nth-child(4),
+.adm-table td:nth-child(5),
+.adm-table td:last-child {
+  white-space: nowrap;
 }

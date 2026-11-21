@@ -1,21 +1,20 @@
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import "@Styles/Admin/Admin.css";
 import "@Styles/Admin/Login.css";
-import { useRef } from "react";
+import { useRef, type FormEvent } from "react";
+import { Link } from "react-router-dom";
+import { LuArrowLeft } from "react-icons/lu";
 import toast from "react-hot-toast";
-import { auth } from "src/Config/Firebase-config";
+import { LogoMark } from "@Components/Logo";
 
 export default function ResetPass() {
   const auth = getAuth();
   const Forgetemailref = useRef<HTMLInputElement>(null);
-  const HandleForgetPassword = async (e: any) => {
+  const HandleForgetPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let Forgetemail = { email: "" };
-    if (Forgetemailref.current) {
-      Forgetemail.email = Forgetemailref.current?.value;
-    }
-    console.log(Forgetemail.email);
+    const email = Forgetemailref.current?.value ?? "";
     try {
-      await sendPasswordResetEmail(auth, Forgetemail.email);
+      await sendPasswordResetEmail(auth, email);
       toast.success("Password reset email sent successfully");
     } catch (error) {
       console.error(error);
@@ -24,26 +23,43 @@ export default function ResetPass() {
   };
 
   return (
-    <>
-      <div className="login-container">
-        <div className="forget-password-form">
-          <h2 className="forget-password-heading">Forget Password</h2>
-          <form action="" className="forget" onSubmit={HandleForgetPassword}>
+    <main className="adm-login">
+      <div className="adm-login__card">
+        <div className="adm-login__brand">
+          <LogoMark size={32} />
+          <span>Dizaino World</span>
+        </div>
+        <div className="adm-login__head">
+          <span className="eyebrow">Admin</span>
+          <h1 className="adm-title">
+            Reset password
+          </h1>
+        </div>
+        <form className="adm-form" onSubmit={HandleForgetPassword}>
+          <div className="adm-field">
+            <label htmlFor="reset-email" className="adm-label">
+              Email
+            </label>
             <input
               type="email"
-              placeholder="Enter Yor Email"
-              className="admin-email"
+              id="reset-email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              className="adm-input"
               ref={Forgetemailref}
+              required
             />
-            <button type="submit" className="forget-password-btn">
-              Reset Password
+          </div>
+          <div className="adm-login__actions">
+            <button type="submit" className="btn btn--dark">
+              Send reset link
             </button>
-          </form>
-          {/* <p className="go-back-text-login" onClick={Handleforgetform}>
-          Go Back To Login
-        </p> */}
-        </div>
+          </div>
+        </form>
       </div>
-    </>
+      <Link to="/admin" className="adm-login__back">
+        <LuArrowLeft aria-hidden /> Back to login
+      </Link>
+    </main>
   );
 }

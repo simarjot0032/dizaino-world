@@ -1,9 +1,8 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Home from "@Components/Home";
-import { useEffect } from "react";
-import UnderCons from "@Components/UnderConst";
 import Bedroom from "@Components/Bedroom";
 import Kitchen from "@Components/Kitchen";
 import LivingAreas from "@Components/LivingAreas";
@@ -17,155 +16,79 @@ import CommercialExterior from "@Components/CommercialExterior";
 import ClassicalExterior from "@Components/ClassicalExterior";
 import Contact from "@Components/Contact";
 import CommercialInterior from "@Components/CommercialInterior";
-import { BiUnderline } from "react-icons/bi";
 import TwoDPlanning from "@Components/TwoDPlanning";
 import ThreeDPlanning from "@Components/ThreeDPlanning";
 import TerraceGardern from "@Components/TerraceGardern";
-import Admin from "@Components/ADMIN/Admin";
-import Login from "@Components/ADMIN/Login";
-import ResetPass from "@Components/ADMIN/ResetPass";
+import Projects from "@Components/Projects";
+import NotFound from "@Components/NotFound";
+import RequireAdmin from "@Components/ADMIN/RequireAdmin";
+import AdminHome from "@Components/ADMIN/AdminHome";
 import ChangePassword from "@Components/ADMIN/ChangePassword";
 import AdminProjectUpload from "@Components/ADMIN/AdminProjectUpload";
-import Projects from "@Components/Projects";
 import ContactForm from "@Components/ADMIN/ContactForm";
+
+/** Reset scroll on route change (unless navigating to an in-page hash). */
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
+
+const routes = [
+  { path: "/Bedroom", element: <Bedroom /> },
+  { path: "/Kitchen", element: <Kitchen /> },
+  { path: "/Living-area", element: <LivingAreas /> },
+  { path: "/Pooja-Room", element: <PoojaRoom /> },
+  { path: "/Washroom", element: <Washroom /> },
+  { path: "/Down-Ceiling", element: <DownCeiling /> },
+  { path: "/Theater", element: <Theater /> },
+  { path: "/Dining", element: <Dining /> },
+  { path: "/Residential-Exterior", element: <ResidentialExterior /> },
+  { path: "/Commercial-Exterior", element: <CommercialExterior /> },
+  { path: "/Classical-Exterior", element: <ClassicalExterior /> },
+  { path: "/2d-Planning", element: <TwoDPlanning /> },
+  { path: "/3D-Planning", element: <ThreeDPlanning /> },
+  { path: "/TerraceGarden", element: <TerraceGardern /> },
+  { path: "/Projects", element: <Projects /> },
+  { path: "/Contact", element: <Contact /> },
+  { path: "/CommercialInterior", element: <CommercialInterior /> },
+
+  // Admin: every page is behind the login gate (signed out -> login form).
+  { path: "/admin", element: <RequireAdmin><AdminHome /></RequireAdmin> },
+  { path: "/admin/projects", element: <RequireAdmin><AdminProjectUpload /></RequireAdmin> },
+  { path: "/admin/enquiries", element: <RequireAdmin><ContactForm /></RequireAdmin> },
+  { path: "/admin/password", element: <RequireAdmin><ChangePassword /></RequireAdmin> },
+
+  // Old admin addresses keep working.
+  { path: "/Admin-login", element: <Navigate to="/admin" replace /> },
+  { path: "/ProjectUpload", element: <Navigate to="/admin/projects" replace /> },
+  { path: "/Contact-Form", element: <Navigate to="/admin/enquiries" replace /> },
+  { path: "/ChangePassword", element: <Navigate to="/admin/password" replace /> },
+];
 
 function App() {
   useEffect(() => {
     AOS.init({
-      disable: false,
-      startEvent: "DOMContentLoaded",
-      initClassName: "aos-init",
-      animatedClassName: "aos-animate",
-      useClassNames: false,
-      disableMutationObserver: false,
-      debounceDelay: 50,
-      throttleDelay: 99,
-      offset: 120,
-      delay: 0,
-      duration: 400,
-      easing: "ease",
-      once: false,
-      mirror: false,
-      anchorPlacement: "top-bottom",
+      once: true,
+      duration: 700,
+      easing: "ease-out-cubic",
+      offset: 60,
     });
-  });
-  const routesarray = [
-    {
-      link: "/Bedroom",
-      element: <Bedroom />,
-    },
-    {
-      link: "/Kitchen",
-      element: <Kitchen />,
-    },
-    {
-      link: "/Living-area",
-      element: <LivingAreas />,
-    },
-    {
-      link: "/Pooja-Room",
-      element: <PoojaRoom />,
-    },
-    {
-      link: "/Washroom",
-      element: <Washroom />,
-    },
-    {
-      link: "/Down-Ceiling",
-      element: <DownCeiling />,
-    },
-    {
-      link: "/Theater",
-      element: <Theater />,
-    },
-    {
-      link: "/Dining",
-      element: <Dining />,
-    },
-    {
-      link: "/Residential-Exterior",
-      element: <ResidentialExterior />,
-    },
-    {
-      link: "/Commercial-Exterior",
-      element: <CommercialExterior />,
-    },
-    {
-      link: "/Classical-Exterior",
-      element: <ClassicalExterior />,
-    },
-    // {
-    //   link: "/Offices",
-    //   element: <UnderCons />,
-    // },
-    // {
-    //   link: "/Restruants",
-    //   element: <UnderCons />,
-    // },
-    // {
-    //   link: "/Salons",
-    //   element: <UnderCons />,
-    // },
-    {
-      link: "/2d-Planning",
-      element: <TwoDPlanning />,
-    },
-    {
-      link: "/3D-Planning",
-      element: <ThreeDPlanning />,
-    },
-    {
-      link: "/TerraceGarden",
-      element: <TerraceGardern />,
-    },
-    {
-      link: "/Projects",
-      element: <Projects />,
-    },
-    {
-      link: "/Contact",
-      element: <UnderCons />,
-    },
-    {
-      link: "/CommercialInterior",
-      element: <CommercialInterior />,
-    },
-    {
-      link: "/Admin",
-      element: <Admin />,
-    },
+  }, []);
 
-    {
-      link: "/Admin-login",
-      element: <Login />,
-    },
-    {
-      link: "/ProjectUpload",
-      element: <AdminProjectUpload />,
-    },
-    {
-      link: "/ChangePassword",
-      element: <ChangePassword />,
-    },
-    {
-      link: "/Contact Form",
-      element: <ContactForm />,
-    },
-  ];
   return (
-    <>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-
-          {routesarray.map((item, index): any => {
-            return (
-              <Route path={item.link} element={item.element} key={index} />
-            );
-          })}
-        </Routes>
-      </HashRouter>
-    </>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {routes.map((item) => (
+          <Route path={item.path} element={item.element} key={item.path} />
+        ))}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
