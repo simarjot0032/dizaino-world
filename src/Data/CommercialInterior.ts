@@ -18,40 +18,6 @@ import ci3 from "@Assets/CommercialInterior/ci3.jpg";
 import ci4 from "@Assets/CommercialInterior/ci4.jpg";
 import ci5 from "@Assets/CommercialInterior/ci5.jpg";
 import ci6 from "@Assets/CommercialInterior/ci6.jpg";
-export const Whatwecandesigntabs = [
-  {
-    tab: "Offices",
-  },
-  {
-    tab: "Salons",
-  },
-  {
-    tab: "Hotels",
-  },
-  {
-    tab: "Restraunts",
-  },
-  {
-    tab: "Retail Stores",
-  },
-  {
-    tab: "Fitness Centers",
-  },
-  {
-    tab: "Medical Offices",
-  },
-  {
-    tab: "And Many More",
-  },
-];
-// export const Officesarray = [
-//   {
-//     url: "https://i.pinimg.com/564x/a5/e1/c3/a5e1c31c327694f86c8a1f33fc3ff732.jpg",
-//   },
-//   {
-//     url: "https://i.pinimg.com/564x/d6/7c/be/d67cbea3711a42d7efc9cb5c234f8dce.jpg",
-//   },
-// ];
 export const Whatwecandesigntabcontent = [
   {
     image: taboffice,
@@ -73,7 +39,7 @@ export const Whatwecandesigntabcontent = [
   },
   {
     image: tabrestraunts,
-    heading: "Restraunts",
+    heading: "Restaurants",
     content:
       "Indulge your senses with our restaurant interior designs that blend style with functionality. Whether you're a cozy cafe or a fine dining establishment, we'll work closely with you to create a dining experience that leaves a lasting impression. From atmospheric lighting to stylish furniture, we'll design a space that enhances the ambiance and elevates the culinary journey.",
   },

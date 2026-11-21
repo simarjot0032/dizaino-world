@@ -1,20 +1,44 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
-const firebaseConfig = {
-  apiKey: "AIzaSyABRXvv5RXd3bVloEhKYpA6NhBq1dlWPMA",
-  authDomain: "dizainoworld-f1a6d.firebaseapp.com",
-  databaseURL: "https://dizainoworld-f1a6d-default-rtdb.firebaseio.com",
-  projectId: "dizainoworld-f1a6d",
-  storageBucket: "dizainoworld-f1a6d.appspot.com",
-  messagingSenderId: "464137711650",
-  appId: "1:464137711650:web:ed1c617ecdffedcc1e5a7b",
-};
+
+// Values come from .env (see .env.example).
+const env = import.meta.env;
+
+/** True once the Firebase values in .env are filled in. */
+export const firebaseConfigured = Boolean(
+  env.VITE_FIREBASE_API_KEY && env.VITE_FIREBASE_PROJECT_ID
+);
+
+if (!firebaseConfigured) {
+  console.warn(
+    "[Dizaino World] Firebase is not configured. Fill in the VITE_FIREBASE_* values in .env " +
+      "(see .env.example). The site still renders, but the contact form, projects and admin won't work."
+  );
+}
+
+// Without real values Firebase throws during start-up (e.g. auth/invalid-api-key),
+// which would blank the whole site. Placeholders let the app render; any Firebase
+// call then fails at request time and the pages show their error states instead.
+const firebaseConfig = firebaseConfigured
+  ? {
+      apiKey: env.VITE_FIREBASE_API_KEY,
+      authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+      databaseURL:
+        env.VITE_FIREBASE_DATABASE_URL ||
+        `https://${env.VITE_FIREBASE_PROJECT_ID}-default-rtdb.firebaseio.com`,
+      projectId: env.VITE_FIREBASE_PROJECT_ID,
+      appId: env.VITE_FIREBASE_APP_ID,
+    }
+  : {
+      apiKey: "not-configured",
+      authDomain: "not-configured.firebaseapp.com",
+      databaseURL: "https://not-configured-default-rtdb.firebaseio.com",
+      projectId: "not-configured",
+      appId: "not-configured",
+    };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const storage = getStorage(app);
 const database = getDatabase(app);
-export { app, auth, storage, database };
+export { app, auth, database };

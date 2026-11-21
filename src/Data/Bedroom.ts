@@ -92,7 +92,7 @@ export const AccordianBedroom = [
   {
     question: "What services do you offer for bedroom design?",
     answer:
-      "Our bedroom design services encompAss everything from initial consultations to final installations. ",
+      "Our bedroom design services encompass everything from initial consultations to final installations. ",
   },
   {
     question: "How do you approach bedroom design projects?",
@@ -108,7 +108,7 @@ export const AccordianBedroom = [
   {
     question: "Do you offer customizable design packages for bedrooms?",
     answer:
-      "Absolutely! We offer customizable design packages tailored to your specific requirements, whether you need a complete bedroom makeover or Assistance with specific design elements. Our flexible packages cater to various budgets and project scopes.",
+      "Absolutely! We offer customizable design packages tailored to your specific requirements, whether you need a complete bedroom makeover or assistance with specific design elements. Our flexible packages cater to various budgets and project scopes.",
   },
   {
     question:

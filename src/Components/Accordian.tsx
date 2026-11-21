@@ -1,33 +1,50 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import "@Styles/Accordian.css";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { RiArrowDropUpLine } from "react-icons/ri";
+
+export interface QuestionAnswer {
+  question: string;
+  answer: string;
+}
 
 interface Props {
-  objectforquestionandanswer: any;
+  objectforquestionandanswer: QuestionAnswer;
+  /** Open on first render. */
+  defaultOpen?: boolean;
 }
-export default function Accordian({ objectforquestionandanswer }: Props) {
-  const [accordian, setaccordian] = useState(false);
-  const handleaccordian = () => setaccordian(!accordian);
+
+/** Hairline FAQ row with a +/− toggle and an animated height. */
+export default function Accordian({ objectforquestionandanswer, defaultOpen = false }: Props) {
+  const [open, setOpen] = useState(defaultOpen);
+  const id = useId();
+  const btnId = `${id}-q`;
+  const panelId = `${id}-a`;
+
   return (
-    <>
-      <div className="accordian-box-container ">
-        <div className="accordian-question-box" onClick={handleaccordian}>
-          <p className="accordian-question">
-            {objectforquestionandanswer.question}
-          </p>
-          <span className="sign">
-            {accordian ? (
-              <RiArrowDropUpLine color="var(--primarycolor)" size={30} />
-            ) : (
-              <RiArrowDropDownLine color="var(--primarycolor)" size={30} />
-            )}
-          </span>
-        </div>
-        <div className={accordian ? "accordian-answer" : "none"}>
-          {objectforquestionandanswer.answer}
+    <div className={`acc${open ? " is-open" : ""}`}>
+      <h3 className="acc__heading">
+        <button
+          type="button"
+          id={btnId}
+          className="acc__btn"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span className="acc__q">{objectforquestionandanswer.question}</span>
+          <span className="acc__icon" aria-hidden="true" />
+        </button>
+      </h3>
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={btnId}
+        className="acc__panel"
+        inert={!open}
+      >
+        <div className="acc__inner">
+          <p className="acc__a">{objectforquestionandanswer.answer.trim()}</p>
         </div>
       </div>
-    </>
+    </div>
   );
 }
